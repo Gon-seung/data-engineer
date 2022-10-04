@@ -100,17 +100,18 @@ def make_resident_number(n=100):
     return answer
 
 
-def make_car(n=100):
+def make_car():
     # code, model, series, generation, price, fuel_type
-    code = random.choice(string.ascii_uppercase) + random.choice(string.ascii_uppercase)
-    models = "POMELO,FRENZY,PITCH,CHIVE,TRIBE,CASTANET,"
-    series = "세단,쿠페,SUV,MPV,경차"
+    models = "POMELO,FRENZY,PITCH,CHIVE,TRIBE,CASTANET".split(",")
+    series = "세단,쿠페,SUV,MPV,경차".split(",")
     fuel_type = "가솔린,디젤,LPG,CNG,전기".split(",")
     answer = []
-    for model in models.split(","):
-        for i in series:
-            for generation in range(random.randint(1, 4)):
-                answer.append([model, i, generation, random.randint(3000, 6000), random.choice(fuel_type)])
+    for model in models:
+        code = random.choice(string.ascii_uppercase) + random.choice(string.ascii_uppercase)
+        fuel = random.choice(fuel_type)
+        series_one = random.choice(series)
+        for generation in range(random.randint(1, 3)):
+            answer.append([code, model, series_one, generation, random.randint(3000, 6000), fuel])
     return answer
 
 
@@ -123,4 +124,4 @@ if __name__ == "__main__":
     print(make_address(10))
     print(make_email(user_ids))
     print(make_resident_number(10))
-    print(make_car(10))
+    print(make_car())
