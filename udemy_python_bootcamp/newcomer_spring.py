@@ -21,7 +21,7 @@ def write_sql(intro, data):
 def write_txt(user_info):
     answer = ""
     for index in range(len(user_info[0])):
-        answer += user_info[0][index] + ", " + user_info[1][index] + "\n"
+        answer += user_info[0][index] + ", " + user_info[1][index] + ", " + user_info[2][index] + "\n"
     return answer
 
 
@@ -49,7 +49,7 @@ def make_user_table(num=200):
             list_resident[i],
             list_role[i]
         ])
-    user_info = [list_name, list_password]
+    user_info = [list_user_id, list_name, list_password]
     return data, user_info
 
 
@@ -100,14 +100,13 @@ if __name__ == "__main__":
                              car_data))
     """
 
-    #"""
+    """
     order_car_data = make_order_car_table(num=300, customer_num=200, car_num=10)
     with open("newcomer_spring_sql/spring_order_car_data.sql", "w") as file:
         file.write(write_sql(INTRO.format("order_car",
-                                          "customer_id,car_id,address,requestmessage,"
+                                          "customer_id,car_id,address,requestmsg,"
                                           "status,price,order_time,release_time"),
                              order_car_data))
-    
-    #"""
+    """
 
 

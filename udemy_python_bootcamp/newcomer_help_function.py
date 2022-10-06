@@ -149,6 +149,6 @@ if __name__ == "__main__":
     print(make_resident_number(10))
     """
 
-    print(make_order(200, 10, 100))
+    print(make_order_time_and_release_time(10))
 
 
