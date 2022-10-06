@@ -1,5 +1,7 @@
 import string
 import random
+import datetime
+import bcrypt
 
 
 def make_user_id(n=100):
@@ -19,14 +21,19 @@ def make_user_id(n=100):
 
 def make_password(n=100):
     # 정해진 길이 만큼의 password를 생성하는 함수
-    len_of_password = 10
+    len_of_password = 2
+    answer_encryption = []
     answer = []
     for _ in range(n):
         new_password = ""
         for _ in range(len_of_password):
             new_password += random.choice(string.ascii_lowercase)
         answer.append(new_password)
-    return answer
+        encode_method = new_password.encode("utf-8")
+        salt = bcrypt.gensalt(10)
+        new_password_encode = str(bcrypt.hashpw(encode_method, salt))[2:-1]
+        answer_encryption.append(new_password_encode)
+    return answer, answer_encryption
 
 
 def make_name(n=100):
@@ -115,7 +122,24 @@ def make_car():
     return answer
 
 
+def make_order(customer_num, car_num, n=100):
+    answer = []
+    address = make_address(n)
+    for i in range(n):
+        answer.append([
+            random.randint(customer_num),
+            random.randint(car_num),
+            address[i],
+            "good",   # 주문 메세지
+            random.randint(0, 2),   # 주문 상태
+            random.randint(3000, 6000),
+            datetime.datetime(2000, 1, 1),
+            datetime.datetime(2000, 1, 1)
+        ])
+
+
 if __name__ == "__main__":
+    """
     user_ids = make_user_id(10)
     print(user_ids)
     print(make_password(10))
@@ -124,4 +148,12 @@ if __name__ == "__main__":
     print(make_address(10))
     print(make_email(user_ids))
     print(make_resident_number(10))
-    print(make_car())
+    """
+
+    print(make_password(10))
+    # print(make_car())
+    a = datetime.datetime(2000, 1, 1)
+    print(str(a))
+    print(type(a))
+
+

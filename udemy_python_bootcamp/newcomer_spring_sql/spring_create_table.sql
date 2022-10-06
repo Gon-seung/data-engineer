@@ -72,10 +72,10 @@ ALTER TABLE Order_Car
 -- Option Table Create SQL
 CREATE TABLE Option
 (
-    `option_id`  INT UNSIGNED    NOT NULL    AUTO_INCREMENT COMMENT '옵션 id', 
-    `name`       VARCHAR(45)     NULL        COMMENT '옵션 이름', 
-    `price`      VARCHAR(45)     NULL        COMMENT '가격', 
-     PRIMARY KEY (option_id)
+    `id`     INT UNSIGNED    NOT NULL    AUTO_INCREMENT COMMENT '옵션 id', 
+    `name`   VARCHAR(45)     NULL        COMMENT '옵션 이름', 
+    `price`  VARCHAR(45)     NULL        COMMENT '가격', 
+     PRIMARY KEY (id)
 );
 
 
@@ -92,8 +92,8 @@ ALTER TABLE Car_Option
         REFERENCES Car (car_id) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 ALTER TABLE Car_Option
-    ADD CONSTRAINT FK_Car_Option_opton_id_Option_option_id FOREIGN KEY (opton_id)
-        REFERENCES Option (option_id) ON DELETE RESTRICT ON UPDATE RESTRICT;
+    ADD CONSTRAINT FK_Car_Option_opton_id_Option_id FOREIGN KEY (opton_id)
+        REFERENCES Option (id) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 
 -- Order_Option Table Create SQL
@@ -110,10 +110,19 @@ ALTER TABLE Order_Option
         REFERENCES Car (car_id) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 ALTER TABLE Order_Option
-    ADD CONSTRAINT FK_Order_Option_option_id_Option_option_id FOREIGN KEY (option_id)
-        REFERENCES Option (option_id) ON DELETE RESTRICT ON UPDATE RESTRICT;
+    ADD CONSTRAINT FK_Order_Option_option_id_Option_id FOREIGN KEY (option_id)
+        REFERENCES Option (id) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 ALTER TABLE Order_Option
     ADD CONSTRAINT FK_Order_Option_order_id_Order_Car_order_id FOREIGN KEY (order_id)
         REFERENCES Order_Car (order_id) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+
+ALTER TABLE User RENAME TO user;
+ALTER TABLE Order_Car RENAME TO order_car;
+ALTER TABLE Car RENAME TO car;
+ALTER TABLE Order_Option RENAME TO order_option;
+ALTER TABLE Option RENAME TO option;
+ALTER TABLE Car_Option RENAME TO car_option;
+
 
