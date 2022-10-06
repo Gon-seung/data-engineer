@@ -1,7 +1,7 @@
 SET FOREIGN_KEY_CHECKS = 0;
-TRUNCATE Car;
+TRUNCATE car;
 SET FOREIGN_KEY_CHECKS = 1;
-INSERT INTO Car (code,model,series,generation,price,fuel_type) 
+INSERT INTO car (code,model,series,generation,price,fuel_type)
 VALUES 
 ('MN', 'POMELO', 'ÄíÆä', 0, 3512, 'µðÁ©'),
 ('MN', 'POMELO', 'ÄíÆä', 1, 4079, 'µðÁ©'),

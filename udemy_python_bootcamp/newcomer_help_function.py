@@ -122,20 +122,19 @@ def make_car():
     return answer
 
 
-def make_order(customer_num, car_num, n=100):
-    answer = []
-    address = make_address(n)
+def make_order_time_and_release_time(n=100):
+    answer_order = []
+    answer_release = []
     for i in range(n):
-        answer.append([
-            random.randint(customer_num),
-            random.randint(car_num),
-            address[i],
-            "good",   # 주문 메세지
-            random.randint(0, 2),   # 주문 상태
-            random.randint(3000, 6000),
-            datetime.datetime(2000, 1, 1),
-            datetime.datetime(2000, 1, 1)
-        ])
+        start_date = datetime.datetime(2010, 1, 1)
+        end_date = datetime.datetime(2022, 10, 1)
+        delta_date = end_date - start_date
+        random_second = random.randint(0, 24*60*60*delta_date.days + delta_date.seconds)
+        order_time = start_date + datetime.timedelta(seconds=random_second)
+        release_time = order_time + datetime.timedelta(seconds=random.randint(24*60*60*180, 24*60*60*365))
+        answer_order.append(str(order_time))
+        answer_release.append(str(release_time))
+    return answer_order, answer_release
 
 
 if __name__ == "__main__":
@@ -150,10 +149,6 @@ if __name__ == "__main__":
     print(make_resident_number(10))
     """
 
-    print(make_password(10))
-    # print(make_car())
-    a = datetime.datetime(2000, 1, 1)
-    print(str(a))
-    print(type(a))
+    print(make_order(200, 10, 100))
 
 
