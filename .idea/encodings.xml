@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding">
-    <file url="file://$PROJECT_DIR$/udemy_python_bootcamp/newcomer_spring_sql/spring_car_data.sql" charset="x-windows-949" />
-    <file url="file://$PROJECT_DIR$/udemy_python_bootcamp/newcomer_spring_sql/spring_order_car_data.sql" charset="x-windows-949" />
-    <file url="file://$PROJECT_DIR$/udemy_python_bootcamp/newcomer_spring_sql/spring_user_data.sql" charset="x-windows-949" />
-    <file url="file://$PROJECT_DIR$/udemy_python_bootcamp/newcomer_spring_sql/spring_user_info.txt" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/udemy_python_bootcamp/spring/newcomer_spring_sql/spring_car_data.sql" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/udemy_python_bootcamp/spring/newcomer_spring_sql/spring_order_car_data.sql" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/udemy_python_bootcamp/spring/newcomer_spring_sql/spring_order_option_data.sql" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/udemy_python_bootcamp/spring/newcomer_spring_sql/spring_user_data.sql" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/udemy_python_bootcamp/spring/newcomer_spring_sql/spring_user_info.txt" charset="x-windows-949" />
     <file url="PROJECT" charset="UTF-8" />
   </component>
 </project>

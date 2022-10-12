@@ -99,10 +99,11 @@ ALTER TABLE Car_Option
 -- Order_Option Table Create SQL
 CREATE TABLE Order_Option
 (
-    `order_id`   INT UNSIGNED    NOT NULL    COMMENT '주문 id', 
-    `option_id`  INT UNSIGNED    NOT NULL    COMMENT '세부 주문의 옵션 id', 
-    `car_id`     INT UNSIGNED    NOT NULL    COMMENT '세부 주문의 자동차 id', 
-     PRIMARY KEY (order_id, option_id, car_id)
+    `id`         INT UNSIGNED    NOT NULL    AUTO_INCREMENT COMMENT '주문 옵션 id',
+    `order_id`   INT UNSIGNED    NOT NULL    COMMENT '주문 id',
+    `option_id`  INT UNSIGNED    NOT NULL    COMMENT '옵션 id',
+    `car_id`     INT UNSIGNED    NOT NULL    COMMENT '자동차 id',
+     PRIMARY KEY (id)
 );
 
 ALTER TABLE Order_Option
@@ -110,12 +111,14 @@ ALTER TABLE Order_Option
         REFERENCES Car (id) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 ALTER TABLE Order_Option
+    ADD CONSTRAINT FK_Order_Option_order_id_Order_Car_id FOREIGN KEY (order_id)
+        REFERENCES Order_Car (id) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+ALTER TABLE Order_Option
     ADD CONSTRAINT FK_Order_Option_option_id_Option_id FOREIGN KEY (option_id)
         REFERENCES Option (id) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
-ALTER TABLE Order_Option
-    ADD CONSTRAINT FK_Order_Option_order_id_Order_Car_id FOREIGN KEY (order_id)
-        REFERENCES Order_Car (id) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
 
 
 
