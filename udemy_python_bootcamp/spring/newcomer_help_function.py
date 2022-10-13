@@ -123,19 +123,40 @@ def make_car():
     """
 
 
+def make_random_time(start_date, end_date):
+    delta_date = end_date - start_date
+    random_second = random.randint(0, 24*60*60*delta_date.days + delta_date.seconds)
+    random_time = start_date + datetime.timedelta(seconds=random_second)
+    return random_time
+
+
 def make_order_time_and_release_time(n=100):
-    answer_order = []
-    answer_release = []
+    answer_status = []
+    answer_times = []
+    answer_refund = []
     for i in range(n):
+        status = random.randint(0, 3)
         start_date = datetime.datetime(2010, 1, 1)
-        end_date = datetime.datetime(2021, 10, 1)
-        delta_date = end_date - start_date
-        random_second = random.randint(0, 24*60*60*delta_date.days + delta_date.seconds)
-        order_time = start_date + datetime.timedelta(seconds=random_second)
-        release_time = order_time + datetime.timedelta(seconds=random.randint(24*60*60*180, 24*60*60*365))
-        answer_order.append(str(order_time))
-        answer_release.append(str(release_time))
-    return answer_order, answer_release
+        end_date = datetime.datetime(2022, 10, 1)
+        time_list = []
+        for pos in range(status + 1):
+            random_time = make_random_time(start_date, end_date)
+            time_list.append(random_time)
+        if random.random() < 0.1:
+            status = 4
+            random_time = make_random_time(start_date, end_date)
+            time_list.append(random_time)
+        time_list = sorted(time_list)
+        time_list = list(map(str, time_list))
+        if status == 4:
+            answer_refund.append(time_list.pop())
+        else:
+            answer_refund.append("NULL")
+        while len(time_list) < 4:
+            time_list.append("NULL")
+        answer_status.append(status)
+        answer_times.append(time_list)
+    return answer_status, answer_times, answer_refund
 
 
 if __name__ == "__main__":
@@ -150,6 +171,5 @@ if __name__ == "__main__":
     print(make_resident_number(10))
     """
 
-    print(make_order_time_and_release_time(10))
-
+    print(make_order_time_and_release_time(20))
 

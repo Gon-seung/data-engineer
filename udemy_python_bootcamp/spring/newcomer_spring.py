@@ -62,22 +62,21 @@ def make_order_car_table(num=300, customer_num=200, car_num=10):
     car_prices = {1: 5001, 2: 5200, 3: 1375, 4: 3867, 5: 3418, 6: 3212, 7: 2596, 8: 2144, 9: 2474, 10: 3738}
 
     list_address = help_fun.make_address(num)
-    list_order, list_release = help_fun.make_order_time_and_release_time(num)
+    list_status, list_times, list_refund = help_fun.make_order_time_and_release_time(num)
     answer = []
     for i in range(num):
         car_id = random.randint(1, car_num)
-        status = random.randint(0, 2) # 주문 상태, 0 배송중, 1 배송완료, 2 환불
-        release_time = list_release[i] if status == 1 else "NULL"
+        status = list_status[i]  # 주문 상태, 0 배송중, 1 배송완료, 2 환불
         answer.append([
             random.randint(1, customer_num),
             car_id,
             list_address[i],
             "good",
             status,  # 주문 상태
-            car_prices[car_id] + random.randint(0, 2000),  # price
-            list_order[i],
-            release_time
+            car_prices[car_id] + random.randint(0, 2000)  # price
         ])
+        answer[-1].extend(list_times[i])
+        answer[-1].append(list_refund[i])
     return answer
 
 
@@ -110,7 +109,7 @@ if __name__ == "__main__":
             "SET FOREIGN_KEY_CHECKS = 1;\n" \
             "INSERT INTO {0} ({1}) \nVALUES \n"
 
-    #"""
+    """
     user_data, user_id_pw_info = make_user_table(200)
     with open("newcomer_spring_sql/spring_user_data.sql", "w") as file:
         file.write(write_sql(INTRO.format("user",
@@ -118,14 +117,15 @@ if __name__ == "__main__":
                              user_data))
     with open("newcomer_spring_sql/spring_user_info.txt", "w") as file:
         file.write(write_txt(user_id_pw_info))
-    #"""
+    """
 
     #"""
     order_car_data = make_order_car_table(num=300, customer_num=200, car_num=10)
     with open("newcomer_spring_sql/spring_order_car_data.sql", "w") as file:
         file.write(write_sql(INTRO.format("order_car",
                                           "customer_id,car_id,address,requestmsg,"
-                                          "status,price,order_time,release_time"),
+                                          "status,price,order_time,order_completed_time,"
+                                          "produce_start_time,release_time,refund_time"),
                              order_car_data))
     #"""
 
