@@ -1,0 +1,27 @@
+## Docker란
+
+Docker란 컨테이너 기술. 컨테이너를 생성하고 관리하기 위한 도구. 
+소프트웨어 개발에서 컨테이너란 표준화된 소프트웨어.
+
+1) 동일한 버전의 컨테이너의 경우, 같은 결과 값이 나오게 된다.
+2) 컨테이너가 최신 운영체제에 내장되어 있음
+3) docker는 이러한 컨테이너를 생성하고 관리
+
+ex) NodeJS의 경우 JavaScript 코드를 실행하는데 사용할 수가 있는 JavaScript 런타임.
+
+## Why containers?
+독립적인 표준화된 어플리캐이션 패키지를 원하는 이유
+다른 환경, 동일한 환경에서 테스트되기를 원함
+이전 버전에서는 오류가 발생할 수가 있음.
+
+## Virtual Machines VS Docker
+### Virtual Machines
+OS 위에 각각의 Virtual OS와 libraries, dependencies tool와 app이 존재.
+1) Virtual Machine에서 실행되는 오버헤드가 문제가 있음. 이러한 머신이 여러대 있을 경우 매번 새로운 컴퓨터를 설치해야하기에 메모리 CPU, 하드 드라이버 공간을 소모
+2) 분리된 환경. 환경마다 구체적인 설정 가능
+3) boot time이 오래 걸림.
+
+### Docker
+OS 위에 Emulated Container Support와 Docker Engine이 존재. 그 위에 각각의 App와 Libraries로 이루어진 Container들이 존재
+
+
