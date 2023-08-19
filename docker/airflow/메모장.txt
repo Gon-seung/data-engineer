@@ -1,0 +1,9 @@
+multinode 가이드
+https://medium.com/@wikankun/configure-multi-node-airflow-architecture-using-docker-compose-28fc9d2429de
+
+docker-compose up airflow-init
+docker-compose up -d airflow-webserver airflow-scheduler airflow-triggerer flower
+
+docker-compose up -d airflow-worker
+
+docker-compose logs --tail=10000 airflow-worker > worker_logs.log
