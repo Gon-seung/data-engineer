@@ -22,6 +22,12 @@
     3. Phantom Read
         - 한 트랜잭션 내에서 일정 범위의 데이터를 두 번 이상 읽을 때, 다른 트랜잭션이 새로운 데이터를 추가함으로 인해 없던 데이터가 나타나는 현상
 
+### 격리 수준
+    1. Read Uncommitted: Dirty Read, Non-Repeatable Read, Phantom Read
+    2. Read Committed: Non-Repeatable Read, Phantom Read
+    3. Repeatable Read: Phantom Read
+    4. Serializable: 없음
+    
 ### Snapshot too old(ORA-01555) 에러
     - 같은 블록을 여러번 select할 시에 발생
     - delayed 블록 클린아웃이 주요 원인 중 하나이므로, update 후에 테이블을 full scan해서 바로 블록을 클린아웃해주자. 
