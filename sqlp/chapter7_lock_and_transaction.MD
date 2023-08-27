@@ -27,8 +27,15 @@
     2. Read Committed: Non-Repeatable Read, Phantom Read
     3. Repeatable Read: Phantom Read
     4. Serializable: 없음
-    
+
 ### Snapshot too old(ORA-01555) 에러
     - 같은 블록을 여러번 select할 시에 발생
     - delayed 블록 클린아웃이 주요 원인 중 하나이므로, update 후에 테이블을 full scan해서 바로 블록을 클린아웃해주자. 
     - Table Full Scan 및 해시 조인을 사용하여 에러를 해결
+
+### 비관성 동시성 제어 vs 낙관적 동시성 제어
+    - 비관적: 데이터를 읽는 시점부터 Lock 설정. 다른 트랜잭션이 수정할 가능성이 높다고 판단
+    - 낙관적: 데이터를 읽는 시점에는 Lock 설정 X. 다른 트랜잭션이 수정할 가능성이 낮다고 판단. 수정 이후 제대로 되었는지 확인 필요
+
+### 기타
+    - WAIT, NO WAIT 옵션은 select * for update에서만 사용 가능
