@@ -1,1 +1,2 @@
-/docker/airflow/logs
+/docker/docker_airflow/logs
+/etc
