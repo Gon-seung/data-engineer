@@ -3,20 +3,20 @@
 
 ### [Apache Airflow - Dataflow Pipeline](https://github.com/Gon-seung/Movie_Data_Pipeline)
 
-- 설명: airflow 구축
-- 사용 기술: python, Apache Beam, GCP, Google Cloud SDK Shell
+- 설명: Airflow을 활용한 파이프라인 구성
+- 사용 기술: Python, Apache Spark, Airflow
   
 
 ### [Python - intern](https://github.com/Gon-seung/intern/tree/main/cuop)
 
-- 설명: 
-- 사용 기술:
+- 설명: d
+- 사용 기술: Python
 
 
 ### [Apache Airflow - AWS 구축](https://github.com/Gon-seung/data-engineer/tree/main/docker/docker_airflow)
 
-- 설명: 
-- 사용 기술: 
+- 설명: Docker를 이용한 AWS에서의 멀티노드 구성.
+- 사용 기술: AWS, Docker, Airflow
 
 
 ### Others:
