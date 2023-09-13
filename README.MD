@@ -9,7 +9,7 @@
 
 ### [Python - intern](https://github.com/Gon-seung/intern/tree/main/cuop)
 
-- 설명: d
+- 설명: 인턴 활동을 하면서 진행한 python 파일을 정리
 - 사용 기술: Python
 
 
