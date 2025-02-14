@@ -1,0 +1,176 @@
+## DynamoDB
+- 고가용성을 자랑하고 여러 AZ에 복제됨
+- 서버리스이기에 서버를 따로 관리할 필요가 없음
+- nosql이고 완전히 분산되고 거대한 작업량을 가짐
+- 빠르고 일관된 성능
+- IAM 보안과 통합되기에 권한과 관리에 용이
+- 이벤트 기반 프로그래밍 가능
+- 저비용에 자동 크기 조정 가능
+- 표준과 IA(infrequent access) 테이블 클래스를 가짐
+### NoSQL
+- 관계가 없는 db로 분산이 가능
+- 몽고 다이나모디비 등
+- 쿼리 조인이 부분 지원 또는 없음
+- 데이터가 데이터베이스 한 행에 있어야함
+- 수평으로 확장 가능
+### 기본
+    - 테이블로 만들어짐 (테이블은 지역 레벨)
+    - 각 테이블은 PK를 가짐(테이블 생성시에 정의해야함)
+        - option1: Partition Key (Hash)
+            - partition Key는 각 item마다 고유해야함
+            - partition key는 데이터가 분산될 수 있도록 다양해야함
+        - option2: Partition Key + Sort Key (HASH + RANGE)
+            - 조합은 각 item마다 고유해야함
+            - 데이터는 partiiton key마다 그룹화됨
+            - ex) 유저(partition key)별 game id(sort key)
+    - 여러개의 item을 가짐(=row)
+    - 각 item은 attribute를 가짐 (계속 추가 가능, null도 가능)
+    - item의 max size는 400kb
+    - 지원 타입
+        - Scalar Type: String, Number, Binary, Boolean, Null
+        - Document Type: List, Map 
+        - Set Type: String Set, Number Set, Binary Set
+
+## Read/Write 수용 모드
+- 테이블의 수용량을 관리 (read/write 처리량)
+- provisioned mode (디폴트)
+    - 초당 read/write 개수를 지정
+    - 용량을 계획해야함
+    - provisioned(공급된) read/write 용량에 대해서 지불해야함
+    - RCU(Read Capacity Unit) - 읽기 처리량
+        - Strong Consistent Read VS Eventually Consistent Read
+            - Eventually Consistent Read
+                - 디폴트 설정
+                - write 직후에 read한다면, 복제 때문에 불안정한 데이터 획득 가능
+            - Strong Consistent Read
+                - write 직후에 read한다면, 정확한 데이터 획득
+                - ConsistentRead 변수를 Ture로 바꾸고 api call을 해야함
+        - RCU는 1 Strong Consistent Read/s or 2 Eventually Consistent Read/s를 의미하고 item은 4kb까지 가능
+    - WCU(Write Capacity Unit) - 쓰기 처리량
+        - 1초당 1KB까지의 크기를 쓰는 것을 의미
+        - 10 items/s로 쓰고, item은 2KB일 경우 -> 20 WCU
+        - 6 items/s로 쓰고, item은 4.5KB일 경우 -> 6*5 = 30 WCU (4.5는 올림처림됨, 1WCU가 0~1KB까지를 처리하므로)
+    - auto-scaling 설정을 통해 스케일링 가능
+    - Burst Capacity를 통해서 처리량 임시 증가 가능
+    - 위의 임시도 다 사용하면 ProvisionedThroughputExceededException을 가지게 됨
+    - 위의 것을 가지면 지수 백업 재시도를 권장함
+- On-Demand Mode
+    - 자동적으로 읽기 쓰기를 함
+    - 스케일업 자동으로 함
+    - 플래닝 불필요
+    - 사용한 양만큼 지불하지만 비쌈 (2.5배 더 비쌈)
+    - RRU(RCU와 동일), WRD(WCU와 동일)
+    - 예측 불가능할때에만 사용할 것
+- 24시간마다 mode 변경이 가능
+- Partition Internal
+    - 모든 데이터의 partition key는 hash 알고리즘을 통해서 어느 partition에 갈지 결정됨
+    - 파티션 용량 = (RCU 개수) / 3000 + (WCU 개수) / 1000
+    - 파티션 사이즈 = (Total Size) / 10GB
+    - 파티션의 개수는 위 2개중 max값으로 결정됨
+    - 각 파티션은 골고루 RCU와 WCU에 배분됨
+- 스로틀링(Throttling)
+    - RCU or WCU가 초과되면, ProvisionedThroughputExceededException을 가짐
+    - 초과한 이유는 하나의 파티션이 너무 많이 읽히거나, 많은 item의 존재 등이 있음
+    - 이를 위해서 속도를 조절할 필요가 있음
+    - 초과시에 지수 백오프를 설정해두거나, partition keys 분배를 가능한 많이 해야함
+    - RCU 이슈로 인해 DAX 기능을 사용할 수도 있음(DynamoDB Accelerator)
+
+## DynamoDB API
+- Putitem 기능
+    - new item을 생성하거나 old item을 모두 대체 (같은 primary key)
+    - WCU 소모
+- Updateitem
+    - item을 수정하거나 존재하지 않는 새로운 item 추가
+    - 원자 카운터와 사용 가능
+- Conditional Write
+    - condition이 만날때만 update write delete 수행
+    - condition이 없으면 에러
+- Getitem
+    - primary key를 읽음
+    - primary key는 Hash 또는 Hash + Range가 될 수가 있음
+    - 디폴트는 Eventually consistent read (변환 가능)
+    - ProjectionExpression는 몇개의 속성만 얻을 수 있도록 도와줌
+    - 하나의 item을 얻을 수 있음
+- Query
+    - 특정 파티션을 읽을 수가 있음
+    - KeyConditionExpression
+        - Partition Key value가 필수로 필요 (등호 조건만 가능)
+        - sort key value(< = <= between)는 옵션으로 추가 가능
+    - FilterExpression
+        - Query Operation 실행 후에 필터링 진행 (데이터 제공 직전)
+        - nonkey attribute에만 사용(HASH RANGE 속성은 사용 불가)
+    - return
+        - limit을 걸어야함
+        - 최대 1MB, 이후는 페이징으로 나눠야함
+- Scan
+    - 테이블 전체를 읽고 필터링 진행 (비효율)
+    - 최대 1MB, 이후는 페이징으로 나눠야함
+    - 많은 RCU 소모
+    - LIMIT을 통해서 영향도를 줄여야함
+    - 더 빠른 성능을 위해 parallel scan 사용
+    - ProjectionExpression and FilterExpression 사용 가능 (RCU 값에는 변화 없음)
+- Delete
+    - deleteitem
+        - 각각의 item 삭제
+    - deletetable
+        - table 삭제
+        - deleteitem을 통해 모든 item 삭제하는 것보다 훨씬 빠름
+- Batch operation
+    - api call 개수를 줄여서 대기 시간을 절약
+    - 모든 배치에 병렬로 적용
+    - 배치의 일부가 실패할 수 있음. 그러면 다시 실행
+    - BatchWriteItem
+        - 한번에 최대 25개의 PutItem and/or DeleteItem 사용 가능
+        - data written에 최대 16mb, item당 최대 400kb
+        - 업데이트 불가 (updateitem으로 해야함)
+        - unprocessditem을 통해서 실패한 작업을 재수행 (지수 백업 or add WCU)
+    - BatchGetitem
+        - 1개 이상의 테이블로부터 item을 얻음
+        - 최대 100 item, 최대 16MB
+        - 대기 시간을 최소하하기 위해 병렬 검색 가능
+        - unprocessditem을 통해서 실패한 작업을 재수행 (지수 백업 or add WCU)
+- PartiQL
+    - 호환 가능한 SQL문을 사용 가능
+    - CRUD 모두 가능 (select insert update delete)
+    - 여러 테이블 사용 가능
+
+## index
+- LSI (Local Secondary Index)
+    - 대체용 정렬 키를 제공 (Partition Key와 동일하고 sort key가 달라짐)
+    - 정렬 키는 스칼라 특성으로 구성 (string, number, binary)
+    - 테이블 생성시에 정의되어야함
+    - Attribute Projection - 테이블의 모든 또는 일부 속성을 포함 가능
+- GSI (Global Secondary Index)
+    - 대체 기본 키 제공(HASH or HASH + RANGE)
+    - LSI와 다른 점은 RCU WCU 값을 인덱스에 제공해야함
+    - 테이블 생성 후 변경 가능
+    - GSI에서 속도가 줄어들면, 메인 테이블도 동시에 줄어듦
+
+## DAX (DynamoDB Accelerator)
+- 높은 사용성, 메모리 캐시를 사용, 알아서 관리됨
+- 읽기와 쿼리에 ms초 지연됨
+- 로직 수정이 풀필요(기존 API와 호환 가능)
+- 너무 많이 읽는 핫키 문제를 해결 - 값을 5분동안 캐시에 저장 (디폴트)
+- 클러스터에 최대 10개의 노드 존재
+- DAX vs ElastiCache
+    - DAX는 쿼리 스캔을 위한 캐시 확보
+    - 집계 결과 저장의 경우에는 ElastiCache가 유리
+
+## Streams
+- item의 수정 기록을 주문
+- stream 기록은
+    - kinesis data streams에 보내지거나
+    - aws lambda에 읽어지거나
+    - kinesis client library application에 읽거나
+- 데이터 잔존율은 최대 24시간
+- 이용 예시
+    - 실시간 변화에 대응 가능
+    - 분석
+    - cross region 복제에 이행
+
+## TTL(time to live)
+- 시간이 지난 item을 자동적으로 삭제
+- WCU을 소모하지 않음(가격 추가 안됨)
+- UNIX EPOCH TIMESTAMP 값을 포함한 Number 타입이여야 함
+- TTL컬럼을 스캔한 이후 필터링된 데이터는 48시간 이내 삭제됨 (바로 삭제되는게 아님)
+- 삭제된 item은 LSI GSI에도 삭제됨
